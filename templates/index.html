@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../static/jquery.min.js"></script>
+    <title>CoreMate</title>
+</head>
+<body>
+    <h1>CoreMate</h1>
+    <div id="chatbox">
+        <div class="bot-text">
+            <p>Im CoreMate</p>
+        </div>
+
+        <div id="userInput">
+            <input type="text" name="msg" id="textInput" placeholder="Message">
+            <input type="submit" value="Send" id="buttonInput">
+        </div>
+    </div>
+
+    <script>
+        
+        function getBotResponse() {
+            let rawText = $("#textInput").val();
+            let userHtml = "<p class='userText'><span>" + rawText + "</span></p>";
+
+            $("#textInput").val("");
+            $("#chatbox").append(userHtml);
+
+            document.getElementById("userInput").scrollIntoView({block: "start", behavior: "smooth"});
+
+            $.get("/get", {msg: rawText}).done(function(data) {
+                let botHtml = "<p class='botText'><span>" + data + "</span></p>"
+
+                $("#chatbox").append(botHtml);
+
+                document.getElementById("userInput").scrollIntoView({block: "start", behavior: "smooth"});
+            });
+        }
+
+        $("#textInput").keypress(function(e) {
+            if (e.which == 13){
+                getBotResponse();
+            }
+        });
+
+        $("#buttonInput").click(function() {
+            getBotResponse();
+        });
+    </script>
+</body>
+</html>
